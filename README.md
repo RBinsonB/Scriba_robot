@@ -1,4 +1,5 @@
 # Scriba robot
+More information (such as components used, robot building and so on) can be found on the [Hackster page of the project.](https://www.hackster.io/robinb/scriba-robot-a-printing-robot-0048fa)
 ## Concept
 Scriba is a printing robot. It prints on its wake, using the sheet edges and the printing in process as a reference for its navigation. It uses multiple cameras to correct its trajectory and printing alignment through a SLAM algorithm
 
