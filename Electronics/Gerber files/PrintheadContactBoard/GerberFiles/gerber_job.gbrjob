@@ -1,0 +1,24 @@
+{
+    "Header": {
+        "Comment": "All values are metric (mm)",
+        "CreationDate": "2019-07-31T14:13:01Z",
+        "GenerationSoftware": {
+            "Application": "EAGLE",
+            "Vendor": "Autodesk",
+            "Version": "9.3.0"
+        },
+        "Part": "Single"
+    },
+    "Overall": {
+        "BoardThickness": 1.57,
+        "LayerNumber": 2,
+        "Name": {
+            "ProjectId": "Printhead_contact_board"
+        },
+        "Owner": "Robin Loic <r-baran@hotmail.fr>",
+        "Size": {
+            "X": 36.048844,
+            "Y": 26.51
+        }
+    }
+}
