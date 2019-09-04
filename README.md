@@ -59,7 +59,7 @@ The detailed [technical design description can be found here.](https://raw.githu
 ### Controls
 The main computer of the robot is an Odroid-XU4 running Ubuntu 18.04 and mainly relying on a ROS (Robot Operating System) program to run the robot. Computer vision tasks are carried out by OpenCV programs interfaced with the ROS main program.
 
-Actuator controls is carried out by two Arduinos Nano, as they can handle real-time operation and GPIO control better than the main computer. They are connected to serial node on the ROS main program.
+Actuator control is carried out by two Arduinos Nano, as they can handle real-time operation and GPIO control better than the main computer. They are connected to serial node on the ROS main program.
 The robot can be controlled by WiFi from a remote computer by connecting to the Odroid-XU4 via SSH.
 
 ### Drive configuration
