@@ -118,14 +118,16 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
+  include/angle_kalman_filter
   ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/scriba.cpp
+#   include/angle_kalman_filter/angle_kalman_filter.cpp
 # )
+
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -174,7 +176,7 @@ include_directories(
 # )
 
 ## Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
+# install(DIRECTORY include/
 #   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 #   FILES_MATCHING PATTERN "*.h"
 #   PATTERN ".svn" EXCLUDE
@@ -203,6 +205,6 @@ include_directories(
 add_executable(scriba_base_controller src/scriba_base_controller.cpp)
 target_link_libraries(scriba_base_controller ${catkin_LIBRARIES})
 add_dependencies(scriba_base_controller scriba_msgs_generate_messages_cpp)
-add_executable(scriba_odometry_broadcaster src/scriba_odometry_broadcaster.cpp)
+add_executable(scriba_odometry_broadcaster src/scriba_odometry_broadcaster.cpp src/angle_kalman_filter.cpp)
 target_link_libraries(scriba_odometry_broadcaster ${catkin_LIBRARIES})
 add_dependencies(scriba_odometry_broadcaster scriba_msgs_generate_messages_cpp)
