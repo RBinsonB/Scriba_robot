@@ -19,18 +19,21 @@
 //    Construct an angle Kalman filter object with given
 // variances for absolute measurement and relative measurement
 //-------------------------------------------------------------
-AngleKalmanFilter::AngleKalmanFilter(float absoluteMeasVariance, float relativeMeasVariance){
-    updateVariance = absoluteMeasVariance;
-    predictionVariance = relativeMeasVariance;
+AngleKalmanFilter::AngleKalmanFilter(){
 }
 
-//--------------------------------------------
-// Initialize the filter with the given angle
-//--------------------------------------------
-void AngleKalmanFilter::init(float initialAngle){
+//----------------------------------------------------------
+// Initialize the filter with variances and the given angle
+//----------------------------------------------------------
+void AngleKalmanFilter::init(float absoluteMeasVariance,  float relativeMeasVariance, float initialAngle){
+    //Initialize variances
+    updateVariance = absoluteMeasVariance;
+    predictionVariance = relativeMeasVariance;
+
     // set current mean value of filter with given initial angle
     // constrain the angle to normalization
     curMean = constrainAngle(initialAngle);
+
     // set current variance of filter with update variance, assuming
     // initial value if from same source as update measurements
     curVariance = updateVariance;

@@ -25,11 +25,11 @@ public:
     //    Construct an angle Kalman filter object with given
     // variances for absolute measurement and relative measurement
     //-------------------------------------------------------------
-    AngleKalmanFilter(float absoluteMeasVariance, float relativeMeasVariance);
+    AngleKalmanFilter();
     //--------------------------------------------
     // Initialize the filter with the given angle
     //--------------------------------------------
-    void init(float initialAngle);
+    void init(float absoluteMeasVariance,  float relativeMeasVariance, float initialAngle);
     //--------------------------------------------------------
     // Run both steps of Kalman filter and returns mean angle
     //--------------------------------------------------------
