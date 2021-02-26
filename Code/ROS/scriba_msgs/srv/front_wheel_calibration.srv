@@ -1,8 +1,10 @@
 # Calibration service for the steering angle
 
-float32 front_wheel_offset
-float32 microstepSteeringRatio
+float32 front_wheel_offset        # Steering angle offset (in rad)
+float32 microstepSteeringRatio    # Steering stepper motor microstepping ratio
 ---
-float32 minAngle
-float32 maxAngle
-bool result
+float32 minAngle          # Minimum angle at end of course sensor (in rad)
+float32 maxAngle          # Maximum angle at end of course sensor (in rad)
+int16 minSteerPotValue    # Minimum value of the steering angle potentiometer (10 bits int)
+int16 maxSteerPotValue    # Maximum value of the steering angle potentiometer (10 bits int)
+bool result               # Service result boolean
