@@ -193,11 +193,11 @@ void OdometryBroadcaster::odomDataCallback(const scriba_msgs::data_odom& odom_da
 	dt = odom_data_msg.durationMillis/1000;														//Get odometry data sample durations and converts from milliseconds to seconds
 	tractionSteps = odom_data_msg.tractionSteps;													//Get front wheel traveled distance in steps
 	
-	angleStepper = ( stepToAngle(odom_data_msg.stepAngleSteerStart) + stepToAngle(odom_data_msg.stepAngleSteerEnd) )/2;									//Get average front wheel steer angle (in steps)
+	angleStepper = ( stepToAngle(odom_data_msg.steerAngleStepsStart) + stepToAngle(odom_data_msg.steerAngleStepsEnd) )/2;									//Get average front wheel steer angle (in steps)
 	angleEstimator.predictAngle(angleStepper-angleStepperPrev);
 	angleStepperPrev = angleStepper;
 
-	angleEstimator.updateAngle(potentiometerToAngle((odom_data_msg.potAngleSteerStart + odom_data_msg.potAngleSteerStart)/2));
+	angleEstimator.updateAngle(potentiometerToAngle((odom_data_msg.steerAnglePotStart + odom_data_msg.steerAnglePotStart)/2));
 
 	phi = angleEstimator.estimatedAngle;
 

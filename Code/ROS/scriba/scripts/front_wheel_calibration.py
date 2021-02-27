@@ -47,8 +47,10 @@ if __name__ == "__main__":
 	resp2 = front_wheel_calib_client(angle_offset, steeringMicrostepRatio)
 	if resp2.result:
 		print "Calibration successful"
-		print "min angle: %s"%(resp2.minAngle)
-		print "max angle: %s"%(resp2.maxAngle)
+		print "min angle: %s" %(resp2.minAngle)
+		print "max angle: %s" %(resp2.maxAngle)
+		print "min angle potentiometer value: %i" %(resp2.minSteerPotValue)
+		print "max angle potentiometer value: %i" %(resp2.maxSteerPotValue)
 	else:
 		print "Calibration failed"
     
