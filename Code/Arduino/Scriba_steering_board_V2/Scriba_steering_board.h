@@ -11,10 +11,7 @@
 using scriba_msgs::front_wheel_calibration;
 
 //Start ROS node handle
-ros::NodeHandle_<ArduinoHardware, 3, 3, 128, 200> nh; //ROS buffer size /!\ an high buffer size can fill the Arduino's memory. Optimizing the buffer size is capital
-
-// Create Kalman filter with variances
-AngleKalmanFilter angleEstimator(3, 0.5);
+ros::NodeHandle nh; //ROS buffer size /!\ an high buffer size can fill the Arduino's memory. Optimizing the buffer size is capital
 
 int angleStepCmd = 0;
 int tractionSpeedCmd = 0;
@@ -61,8 +58,11 @@ long minSteeringStep = -2000;       //End position right step value
 long maxSteeringStep = 2000;        //End position left step value
 float microstepSteeringRatio = 0.5; //Microstepping configuration for steering motor
 float microstepTractionRatio = 0.5; //Microstepping configuration for traction motor
+float potSteeringRatio = 251;       //Potentiometer ticks per rad
 const float wheelRadius = 0.025;    //Front wheel radius in meters
 const float pi = 3.14159;           //It's just Pi, what did you expect?
+//Compute ratio from potentiometer value to steering motor step
+float stepsPerTick = (180/(0.12 * microstepSteeringRatio * pi)) / potSteeringRatio;robot
 
 //Create stepper objects for steering and traction stepper motor
 AccelStepper tractionStepper = AccelStepper(1, tractionStepPin, tractionDirPin);
@@ -76,9 +76,9 @@ void emergencyStop(byte emergencyCase){
   switch (emergencyCase){
     case 1:   //Emergency stop triggered by emergency button pressed (signal missing)
       nh.logwarn(ScribaDriveLogMsgs::emMsg3);  //"Emergency button pressed"
-      while(digitalRead( EMStopPin) == LOW){
-        nh.spinOnce(); /*wait until emergency signal is resumed*/
-      }
+//       while(digitalRead( EMStopPin) == LOW){
+//        nh.spinOnce(); /*wait until emergency signal is resumed*/
+//       }
       nh.logwarn(ScribaDriveLogMsgs::emMsg2);  //"EMERGENCY STOP DEACTIVATED"
       break;
     case 2:   //Emergency stop triggered by defective or missing microswitch
@@ -147,7 +147,7 @@ void handleCmd (const scriba_msgs::mot_cmd& motCmdMsg) {
   angleStepCmd = (motCmdMsg.angle*(180/pi))/( microstepSteeringRatio*0.12);
   
   //Get front wheel speed command (in m/s & convert m/s speed to step/s speed according to microstepping configuration and motor angle/step ratio
-  tractionSpeed = (motCmdMsg.tractionSpeed/wheelRadius)*(200/( microstepTractionRatio*pi));
+  tractionSpeedCmd = (motCmdMsg.tractionSpeed/wheelRadius)*(200/( microstepTractionRatio*pi));
   
   angleStepCmd = min( angleStepCmd, maxSteeringStep);         //Bound the step angle to the max calibrated value
   angleStepCmd = max( angleStepCmd, minSteeringStep);         //Bound the step angle to the min calibrated value
@@ -186,7 +186,7 @@ void frontWheelCalibCallback(const front_wheel_calibration::Request & req, front
     runMotors(0, 0, -400, 150);
   }
   steeringRangeSteps = steeringStepper.currentPosition();
-  res.minSteerPotValue = analogRead(steeringPotPin);        // Save steering potentiometer value
+  res.maxSteerPotValue = analogRead(steeringPotPin);        // Save steering potentiometer value
   nh.logdebug(ScribaDriveLogMsgs::clbMsg5);                 //"Right end position detected"
   nh.loginfo(ScribaDriveLogMsgs::clbMsg6);
   Serial.print(abs(steeringRangeSteps));
@@ -221,6 +221,10 @@ void frontWheelCalibCallback(const front_wheel_calibration::Request & req, front
 scriba_msgs::data_odom odom_data_msg;
 //Create a odometry data publisher
 ros::Publisher odom_data_pub("odom_data", &odom_data_msg);
+//Create String msg
+std_msgs::String status_msg;
+//Create controller status publisher
+ros::Publisher status_pub("steering_board_status", &status_msg);
 //Create motor command subscriber (custom message type)
 ros::Subscriber<scriba_msgs::mot_cmd> cmd_mot("cmd_mot", &handleCmd);
 //Create front wheel angle calibration service server
@@ -233,9 +237,14 @@ void setupRosNode()
   nh.getHardware()->setBaud(57600);
   nh.subscribe(cmd_mot);
   nh.advertise(odom_data_pub);
+  nh.advertise(status_pub);
   nh.advertiseService(front_wheel_calib);
   nh.spinOnce();
   delay(3000);
+  nh.spinOnce();
+  status_msg.data = "initialized";
+  status_pub.publish(&status_msg);
+  nh.spinOnce();
 }
 
 void enableInputsOutputs()
@@ -277,7 +286,7 @@ void setupController(){
 }
 
 void motorSleep(){
-  angleStepCmd = 0;
+  //angleStepCmd = 0;
   tractionSpeedCmd = 0;
   digitalWrite( tractionSleepPin, LOW);      //Disable traction motor
   digitalWrite( steeringSleepPin, LOW);      //Disable steering motor
@@ -312,29 +321,35 @@ void robotRun(byte& mod, int& tracSpeed, int& tracAcc, int& steerSpeed, int& ang
 void runController(){
   lastMilli = millis();
   //Populate odometry data message
-  odom_data_msg.steerAngleStepsStart = stepAngleStart;               //Angle steps at start of the loop
-  odom_data_msg.steerAngleStepsEnd = stepAngleEnd;                   //Angle steps at end of the loop
-  odom_data_msg.steerAnglePotStart = potAngleStart;                 //Steering angle potentiometer value at start of the loop
-  odom_data_msg.steerAnglePotEnd = potAngleEnd;                     //Steering angle potentiometer value at end of the loop
+  odom_data_msg.steerAngleStepsStart = steerAngleStepsStart;               //Angle steps at start of the loop
+  odom_data_msg.steerAngleStepsEnd = steerAngleStepsEnd;                   //Angle steps at end of the loop
+  odom_data_msg.steerAnglePotStart = steerAnglePotStart;                 //Steering angle potentiometer value at start of the loop
+  odom_data_msg.steerAnglePotEnd = steerAnglePotEnd;                     //Steering angle potentiometer value at end of the loop
   odom_data_msg.tractionSteps = tractionStepper.currentPosition();  //Traveled steps of traction motor
-  odom_data_msg.header.stamp = nh.now();                             //Time stamp
   tractionStepper.setCurrentPosition(0);                            //Set traveled steps back to 0
+  odom_data_msg.header.stamp = nh.now();                             //Time stamp
   odom_data_pub.publish(&odom_data_msg);                            //Publish odometry data
   nh.spinOnce();
     
   if(millis()-lastCommMillis < noCommDurationMax){                        //Check that a motor command has been received recently
     motorWake();
-    robotRun( mode, tractionSpeed, tractionAcc, steeringSpeed, angleStep); //Run robot with received commands
+    robotRun( mode, tractionSpeedCmd, tractionAcc, steeringSpeed, angleStepCmd); //Run robot with received commands
+    //status_msg.data = "wake & run motors";
   } 
   else{                                                   //Stops robot if no communication with host (no motor command received)
     motorSleep();
+    //status_msg.data = "motors sleep";
+    //status_pub.publish(&status_msg);
   }
   nh.spinOnce();
   while((millis()-lastMilli) < looptime){                  //run motors (or no if no communication) while waiting end of looptime
-    robotRun( mode, tractionSpeed, tractionAcc, steeringSpeed, angleStep);
+    robotRun( mode, tractionSpeedCmd, tractionAcc, steeringSpeed, angleStepCmd);
+    //status_msg.data = "run motors";
   }
-  steerAngleStepsStart = stepAngleEnd;                          //Set next angle steps at start as previous end angle
+  steerAngleStepsStart = steerAngleStepsEnd;                    //Set next angle steps at start as previous end angle
   steerAngleStepsEnd = steeringStepper.currentPosition();       //Get angle steps at end of the loop
   steerAnglePotStart = steerAnglePotEnd;
   steerAnglePotEnd = analogRead(steeringPotPin);
+  //status_pub.publish(&status_msg);
+  nh.spinOnce();
 }

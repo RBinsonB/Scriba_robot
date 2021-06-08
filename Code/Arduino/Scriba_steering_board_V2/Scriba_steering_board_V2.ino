@@ -16,4 +16,7 @@ void setup(){
 void loop(){
   // Run controller at set looprate
   runController();
+  //status_msg.data = "board running";
+  //status_pub.publish(&status_msg);
+  nh.spinOnce();
 }  

@@ -282,8 +282,8 @@ void loop()
 {                                                         // enter timed loop
   lastMilli = millis();
   //Populate odometry data message
-  odom_data_msg.stepAngleSteerStart = stepAngleStart;               //Angle at start of the loop
-  odom_data_msg.stepAngleSteerEnd = stepAngleEnd;                   //Angle at end of the loop
+  odom_data_msg.steerAngleStepsStart = stepAngleStart;               //Angle at start of the loop
+  odom_data_msg.steerAngleStepsEnd = stepAngleEnd;                   //Angle at end of the loop
   odom_data_msg.tractionSteps = tractionStepper.currentPosition();  //Traveled steps of traction motor
   odom_data_msg.header.stamp = nh.now();                            //Time stamp
   tractionStepper.setCurrentPosition(0);                            //Set traveled steps back to 0
