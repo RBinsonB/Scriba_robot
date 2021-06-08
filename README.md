@@ -1,5 +1,10 @@
 # Scriba robot
-More information (such as components used, robot building and so on) can be found on the [Hackster page of the project.](https://www.hackster.io/robinb/scriba-robot-a-printing-robot-0048fa)
+More information (such as components used, robot building and so on) can be found on the [Hackster page of the project.](https://www.hackster.io/robinb/scriba-robot-a-printing-robot-0048fa).
+
+ROS code has been moved to dedicated repositories.
+- [scriba_ros](https://github.com/RBinsonB/scriba_ros): robot base packages (for bringup, motor command, odometry)
+- [scriba_localization](https://github.com/RBinsonB/scriba_localization): robot localization related packages (EKF, camera localization)
+
 ## Concept
 Scriba is a printing robot. It prints on its wake, using the sheet edges and the printing in process as a reference for its navigation. It uses multiple cameras to correct its trajectory and printing alignment through a SLAM algorithm
 
@@ -85,37 +90,11 @@ The printhead is placed on a sweeping system. Both have to stay perpendicular to
 
 *Printing system schematics*
 
-## ROS Package description:
-* scriba_description: includes Scriba URDF model and launch files for display in RViz
-  * Launch files:
-    * *scriba_rviz.launch*: Displays the URDF robot model in Rviz with a GUI to configure joint values.
-* scriba_msgs: includes Scriba custom messages
-  * Messages files:
-    * *data_odom.msg*: Custom message for odometry data sent by the Arduino of the drive unit.
-    * *mot_cmd.msg*: Custom message for the motor command sent to the Arduino of the drive unit.
-  * Service files
-    * *front_wheel_calibration.srv*: Custom service for calibration of the front wheel angle. Service server hosted by the Arduino of the drive unit.
-* scriba: includes Scriba main nodes and launch files
-  * Nodes:
-    * *scriba_base_controller.cpp*: Converts velocity commands (vel_cmd) to custom motor command (mot_cmd) to be sent to the Arduino of the drive unit.
-    * *scriba_odometry_broadcaster.cpp*: Receives odometry data from the custom data_odom message type and computes the odometry accordingly.
-  * Launch files:
-    * *scriba_bringup.launch*: Launches all required components for basic odometry and motor command.
-    * *sriba_odom.launch*: Launches all required components for basic odometry.
-    * *scriba_rviz_remote.launch*: Launches RViz with all required parameters for a remote display of the odometry
-  * Scripts:
-    * *front_wheel_calibration.py*: Script for calibration of the front wheel angle. Uses a custom front_wheel_calibration service type.
+## Code description:
 * Arduino: includes Arduino programs.
   * Programs:
     * *Scriba_steering_board_V1*: Program for the arduino of the drive unit. Uses custom message type to receive and execute motor commands, send odometry data and perform calibration operations.
-    
-    
-:bangbang: Services don't work on Arduino with the last rosserial_python and rosserial_arduino packages (0.8.0). Building an older version from source is required in order to use services. Older packages are included in the repository and can be built after uninstalling the repo packages.
-
-:bangbang: There is a bug in the lastest ROS versions (Melodic and Lunar) preventing the correct display on robot models in RViz if you have a local setting other than US. A quick fix working for me was to type the following command before launching RViz:
-```
-export LC_NUMERIC="en_US.UTF-8"
-```
+    * *Scriba_steering_board_V2*: Updated version of the firmware to work with potentiometer on the front wheel steer angle.
 
 ## Authors
 
