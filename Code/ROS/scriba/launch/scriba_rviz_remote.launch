@@ -1,5 +1,0 @@
-<launch>
-	<param name="robot_description" command="cat $(find scriba_description)/urdf/scriba.urdf" />
-		
-	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find scriba_description)/urdf_odom.rviz" required="true" />
-</launch>

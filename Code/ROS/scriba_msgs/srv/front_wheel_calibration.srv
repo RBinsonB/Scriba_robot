@@ -1,6 +1,0 @@
-float32 front_wheel_offset
-float32 microstepSteeringRatio
----
-float32 minAngle
-float32 maxAngle
-bool result

@@ -1,5 +1,0 @@
-Header header
-int32 stepAngleSteerStart
-int32 stepAngleSteerEnd
-int32 tractionSteps
-uint16 durationMillis
