@@ -1,0 +1,285 @@
+<?xml version="1.0"?>
+	<robot name="scriba">
+		<link name="base_link">
+			<visual>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+				<geometry>
+					<mesh filename="package://scriba_description/meshes/main_body.STL" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<material name="white">
+       			<color rgba="1 1 1 1"/>
+     			</material>
+			</visual>
+		</link>
+		
+		<link name="carter">
+			<visual>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+				<geometry>
+					<mesh filename="package://scriba_description/meshes/carter.STL" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<material name="black">
+       			<color rgba="0.1 0.1 0.1 0.9"/>
+     			</material>
+			</visual>
+		</link>
+		
+		<joint name="base_link_to_carter" type="fixed">
+			<parent link="base_link"/>
+			<child link="carter"/>
+			<origin xyz="0 0 0"/>
+		</joint>
+
+		<link name="front_wheel_support">
+			<visual>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+				<geometry>
+					<mesh filename="package://scriba_description/meshes/front_wheel_support.STL" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<material name="white"/>
+			</visual>
+		</link>
+		
+		<joint name="base_link_to_front_wheel_support" type="revolute">
+   		<parent link="base_link"/>
+   		<child link="front_wheel_support"/>
+   		<origin rpy="0 0 0" xyz="0.2156 0 0"/>
+   		<limit effort="1000.0" lower="-1.57080" upper="1.57080" velocity="0.5"/>
+   		<axis xyz="0 0 1"/>
+  		</joint>
+  		
+		<link name="motor">
+			<visual>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+				<geometry>
+					<mesh filename="package://scriba_description/meshes/motor.STL" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<material name="grey">
+       			<color rgba="0.3 0.3 0.3 1"/>
+     			</material>
+			</visual>
+		</link>
+		
+		<joint name="front_wheel_support_to_motor" type="fixed">
+			<parent link="front_wheel_support"/>
+			<child link="motor"/>
+			<origin xyz="0 0.016 0"/>
+		</joint>
+
+		<link name="front_wheel">
+			<visual>
+				<origin rpy="1.57080 0 0" xyz="0 0 0"/>
+				<geometry>
+					<mesh filename="package://scriba_description/meshes/wheel.STL" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<material name="dark_grey">
+       			<color rgba="0.2 0.2 0.2 1"/>
+     			</material>
+			</visual>
+		</link>
+		
+		<joint name="front_wheel_support_to_front_wheel" type="continuous">
+			<parent link="front_wheel_support"/>
+			<child link="front_wheel"/>
+			<origin xyz="0 0 0"/>
+			<axis xyz="0 1 0"/>
+		</joint>
+		
+		<link name="left_rear_wheel">
+			<visual>
+				<origin rpy="1.57080 0 0" xyz="0 0 0"/>
+				<geometry>
+					<mesh filename="package://scriba_description/meshes/wheel.STL" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<material name="dark_grey"/>
+			</visual>
+		</link>
+
+		<link name="right_rear_wheel">
+			<visual>
+				<origin rpy="1.57080 0 0" xyz="0 0 0"/>
+				<geometry>
+					<mesh filename="package://scriba_description/meshes/wheel.STL" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<material name="dark_grey"/>
+			</visual>
+		</link>
+
+		<joint name="base_link_to_left_rear_wheel" type="continuous">
+			<parent link="base_link"/>
+			<child link="left_rear_wheel"/>
+			<origin xyz="0 0.04920 0"/>
+			<axis xyz="0 1 0"/>
+		</joint>
+
+		<joint name="base_link_to_right_rear_wheel" type="continuous">
+			<parent link="base_link"/>
+			<child link="right_rear_wheel"/>
+			<origin xyz="0 -0.04920 0"/>
+			<axis xyz="0 1 0"/>
+		</joint>
+
+		<link name="front_camera_support">
+			<visual>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+				<geometry>
+					<mesh filename="package://scriba_description/meshes/camera_support.STL" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<material name="grey"/>
+			</visual>
+		</link>
+
+		<joint name="base_link_to_front_camera_support" type="fixed">
+			<parent link="base_link"/>
+			<child link="front_camera_support"/>
+			<origin xyz="0.25697 0 0.06050"/>
+		</joint>
+		
+		<link name="front_camera">
+			<visual>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+				<geometry>
+					<mesh filename="package://scriba_description/meshes/camera.STL" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<material name="black"/>
+			</visual>
+		</link>		
+
+		<joint name="front_camera_support_to_front_camera" type="revolute">
+   		<parent link="front_camera_support"/>
+   		<child link="front_camera"/>
+   		<origin rpy="0 0 0" xyz="0.018 0 0.010"/>
+   		<limit effort="1000.0" lower="0.75" upper="1.57080" velocity="0.5"/>
+   		<axis xyz="0 1 0"/>
+  		</joint>
+
+		<link name="front_camera_img_origin"/>
+
+		<joint name="front_camera_to_front_camera_img_origin" type="fixed">
+			<parent link="front_camera"/>
+			<child link="front_camera_img_origin"/>
+			<origin xyz="0.01410 0 0.005"/>
+		</joint>
+		
+		<link name="rear_camera_support">
+			<visual>
+				<origin rpy="0 0 3.14159" xyz="0 0 0"/>
+				<geometry>
+					<mesh filename="package://scriba_description/meshes/camera_support.STL" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<material name="grey"/>
+			</visual>
+		</link>
+
+		<joint name="base_link_to_rear_camera_support" type="fixed">
+			<parent link="base_link"/>
+			<child link="rear_camera_support"/>
+			<origin xyz="-0.04177 0 0.06050"/>
+		</joint>
+		
+		<link name="rear_camera">
+			<visual>
+				<origin rpy="0 0 3.14159" xyz="0 0 0"/>
+				<geometry>
+					<mesh filename="package://scriba_description/meshes/camera.STL" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<material name="black"/>
+			</visual>
+		</link>		
+
+		<joint name="rear_camera_support_to_rear_camera" type="revolute">
+   		<parent link="rear_camera_support"/>
+   		<child link="rear_camera"/>
+   		<origin rpy="0 -2.3208 0" xyz="-0.018 0 0.010"/>
+   		<limit effort="1000.0" lower="0.75" upper="1.57080" velocity="0.5"/>
+   		<axis xyz="0 1 0"/>
+  		</joint>
+
+		<link name="rear_camera_img_origin"/>
+
+		<joint name="rear_camera_to_rear_camera_img_origin" type="fixed">
+			<parent link="rear_camera"/>
+			<child link="rear_camera_img_origin"/>
+			<origin xyz="0.01410 0 0.005"/>
+		</joint>
+
+		<link name="slider_base">
+			<visual>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+				<geometry>
+					<mesh filename="package://scriba_description/meshes/slider_base.STL" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<material name="white"/>
+			</visual>
+		</link>
+
+		<joint name="base_link_to_slider_base" type="revolute">
+   		<parent link="base_link"/>
+   		<child link="slider_base"/>
+   		<origin rpy="0 0 0" xyz="0 0 0.01670"/>
+   		<limit effort="1000.0" lower="-0.11" upper="0.11" velocity="0.5"/>
+   		<axis xyz="0 0 1"/>
+  		</joint>
+
+		<link name="slider">
+			<visual>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+				<geometry>
+					<mesh filename="package://scriba_description/meshes/slider.STL" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<material name="grey"/>
+			</visual>
+		</link>
+
+		<joint name="slider_base_to_slider" type="prismatic">
+   		<parent link="slider_base"/>
+   		<child link="slider"/>
+   		<origin rpy="0 0 0" xyz="0.13311 0 0.017"/>
+   		<limit effort="1000.0" lower="-0.040" upper="0.040" velocity="0.5"/>
+   		<axis xyz="0 1 0"/>
+  		</joint>
+
+		<link name="slider_camera_support">
+			<visual>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+				<geometry>
+					<mesh filename="package://scriba_description/meshes/slider_camera_support.STL" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<material name="grey"/>
+			</visual>
+		</link>
+		
+		<joint name="slider_to_slider_camera_support" type="prismatic">
+   		<parent link="slider"/>
+   		<child link="slider_camera_support"/>
+   		<origin rpy="0 0 0" xyz="-0.061 0 -0.004"/>
+   		<limit effort="1000.0" lower="0" upper="-0.020" velocity="0.5"/>
+   		<axis xyz="0 0 1"/>
+  		</joint>
+  		
+		<link name="slider_camera">
+			<visual>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+				<geometry>
+					<mesh filename="package://scriba_description/meshes/slider_camera.STL" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<material name="black"/>
+			</visual>
+		</link>  		
+
+		<joint name="slider_camera_support_to_slider_camera" type="revolute">
+			<parent link="slider_camera_support"/>
+			<child link="slider_camera"/>
+			<origin xyz="0.025 0 0.001"/>
+			<limit effort="1000.0" lower="-1.57080" upper="1.57080" velocity="0.5"/>
+   		<axis xyz="0 1 0"/>
+		</joint>
+
+		<link name="slider_camera_img_origin"/>
+
+		<joint name="slider_camera_to_slider_camera_img_origin" type="fixed">
+			<parent link="slider_camera"/>
+			<child link="slider_camera_img_origin"/>
+			<origin xyz="0.01410 0 0.005"/>
+		</joint>
+	</robot>

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>scriba</name>
+  <version>1.0.0</version>
+  <description>The scriba printer robot main package</description>
+
+  <maintainer email="r-baran@hotmail.fr">Robin Baran</maintainer>
+
+  <license>GPLv3</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>move_base</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>std_srvs</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>message_runtime</build_depend>
+  <build_depend>scriba_description</build_depend>
+  <build_depend>scriba_msgs</build_depend>
+  <build_export_depend>move_base</build_export_depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>rospy</build_export_depend>
+  <build_export_depend>std_msgs</build_export_depend>
+  <build_export_depend>std_srvs</build_export_depend>
+  <build_export_depend>message_runtime</build_export_depend>
+  <build_export_depend>scriba_description</build_export_depend>
+  <build_export_depend>scriba_msgs</build_export_depend>
+  <exec_depend>move_base</exec_depend>
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>std_srvs</exec_depend>
+  <exec_depend>tf</exec_depend>
+  <exec_depend>message_runtime</exec_depend>
+  <exec_depend>scriba_description</exec_depend>
+  <exec_depend>scriba_msgs</exec_depend>
+
+</package>
